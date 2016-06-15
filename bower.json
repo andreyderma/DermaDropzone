@@ -1,0 +1,21 @@
+{
+  "name": "yii2-dermadropzone",
+  "homepage": "https://github.com/andreyderma/DermaDropzone",
+  "authors": [
+    "Andrey derma putra <andrey.derma@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "dropzone": "enyo/dropzone#^4.3.0"
+  }
+}

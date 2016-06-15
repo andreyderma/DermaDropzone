@@ -18,11 +18,5 @@
         "psr-4": {
             "Derma\\Dropzone\\": ""
         }
-    },
-    "repositories":[
-        {
-            "type": "git",
-            "url": "/Applications/XAMPP/xamppfiles/htdocs/andrey-dropzone/basic/runtime/tmp-extensions/yii2-dermadropzone"
-        }
-    ]
+    }
 }
