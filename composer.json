@@ -11,11 +11,18 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*"
+        "yiisoft/yii2": "*",
+        "hamada/yii2-dermadropzone": "dev-master"
     },
     "autoload": {
         "psr-4": {
             "Derma\\Dropzone\\": ""
         }
-    }
+    },
+    "repositories":[
+        {
+            "type": "git",
+            "url": "file:///Applications/XAMPP/xamppfiles/htdocs/andrey-dropzone/basic/runtime/tmp-extensions/yii2-dermadropzone"
+        }
+    ]
 }
