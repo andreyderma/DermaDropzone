@@ -1,0 +1,21 @@
+{
+    "name": "hamada/yii2-dermadropzone",
+    "description": "Yii2 dropzone extension ",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Andrey derma",
+            "email": "andrey.derma@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Derma\\Dropzone\\": ""
+        }
+    }
+}
