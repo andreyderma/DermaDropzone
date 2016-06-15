@@ -11,7 +11,7 @@ use yii\web\AssetBundle;
 class DermaAsset extends AssetBundle
 {
 
-    public $sourcePath = '@dropzone/vendor';
+    public $sourcePath = '@vendor/hamada/yii2-dermadropzone/vendor/bower';
 
     public $js = [
         "dropzone/dist/min/dropzone.min.js"
