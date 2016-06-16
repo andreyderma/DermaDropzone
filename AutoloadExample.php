@@ -3,16 +3,16 @@
 namespace Derma\Dropzone;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\widgets\InputWidget;
+
 /**
  * This is just an example.
  */
-class AutoloadExample extends \yii\base\Widget
+class AutoloadExample extends InputWidget
+    //\yii\base\Widget
 {
     public $options = [];
 
-    /**
-     * @var array An array of client events that are supported by Dropzone
-     */
     public $clientEvents = [];
 
     //Default Values
@@ -22,15 +22,11 @@ class AutoloadExample extends \yii\base\Widget
     public $previewsContainer = 'previews';
     public $autoDiscover = false;
 
-    /**
-     * Initializes the widget
-     * @throw InvalidConfigException
-     */
+
     public function init()
     {
         parent::init();
 
-        //set defaults
         if (!isset($this->options['url'])) $this->options['url'] = $this->uploadUrl; // Set the url
         if (!isset($this->options['previewsContainer'])) $this->options['previewsContainer'] = '#' . $this->previewsContainer; // Define the element that should be used as click trigger to select files.
         if (!isset($this->options['clickable'])) $this->options['clickable'] = true; // Define the element that should be used as click trigger to select files.
@@ -58,17 +54,29 @@ class AutoloadExample extends \yii\base\Widget
     }
 
     /**
-     * Registers the needed assets
+     * Registers assets
      */
     public function registerAssets()
     {
         $view = $this->getView();
-
+        $imageUrl = isset($this->options['imageUrl']) ? $this->options['imageUrl'] : "";
+        unset($this->options['imageUrl']);
         $js = 'Dropzone.autoDiscover = ' . $this->autoDiscover . '; var ' . $this->id . ' = new Dropzone("div#' . $this->dropzoneContainer . '", ' . Json::encode($this->options) . ');';
 
         if (!empty($this->clientEvents)) {
             foreach ($this->clientEvents as $event => $handler) {
                 $js .= "$this->id.on('$event', $handler);";
+            }
+        }
+
+        if(!$this->model->isNewRecord)
+        {
+            foreach ($this->model as $key=>$vls)
+            {
+                $fileName = $this->name;
+                $js .=  "var mockFile_".$key." = { name: \"".$vls->$fileName."\"};";
+                $js .= "myDropzone.options.addedfile.call(myDropzone, mockFile_".$key.");";
+                $js .= "myDropzone.options.thumbnail.call(myDropzone, mockFile_".$key.", \"".$imageUrl."/".$vls->$fileName."\");";
             }
         }
 
