@@ -8,12 +8,14 @@ use yii\widgets\InputWidget;
 /**
  * This is just an example.
  */
-class AutoloadExample extends InputWidget
+class AutoloadExample extends \yii\base\Widget
+    //InputWidget
     //\yii\base\Widget
 {
     public $options = [];
 
     public $clientEvents = [];
+    public $addFiles = [];
 
     //Default Values
     public $id = 'myDropzone';
@@ -21,6 +23,7 @@ class AutoloadExample extends InputWidget
     public $dropzoneContainer = 'myDropzone';
     public $previewsContainer = 'previews';
     public $autoDiscover = false;
+    public $renameFile = "";
 
 
     public function init()
@@ -59,28 +62,48 @@ class AutoloadExample extends InputWidget
     public function registerAssets()
     {
         $view = $this->getView();
-        $imageUrl = isset($this->options['imageUrl']) ? $this->options['imageUrl'] : "";
-        unset($this->options['imageUrl']);
-        $js = 'Dropzone.autoDiscover = ' . $this->autoDiscover . '; var ' . $this->id . ' = new Dropzone("div#' . $this->dropzoneContainer . '", ' . Json::encode($this->options) . ');';
+//        $imageData = isset($this->options['addFiles']) ? $this->options['addFiles'] : "";
+//        unset($this->options['addFiles']);
+        //$js = 'Dropzone.autoDiscover = ' . $this->autoDiscover . '; var ' . $this->id . ' = new Dropzone("div#' . $this->dropzoneContainer . '", ' . Json::encode($this->options) . ');';
+        $js = 'Dropzone.autoDiscover = ' . $this->autoDiscover . ';';
 
+        $inputJson = $this->options;
+        $renameFilename = $inputJson['renameFilename'];
+        unset($inputJson['renameFilename']);
+
+        $input = Json::encode($inputJson);
+
+        $js .= 'var ' . $this->id . ' = new Dropzone("div#' . $this->dropzoneContainer . '", ' . $input . ');';
         if (!empty($this->clientEvents)) {
             foreach ($this->clientEvents as $event => $handler) {
                 $js .= "$this->id.on('$event', $handler);";
             }
         }
 
-        if(!$this->model->isNewRecord)
-        {
-            foreach ($this->model as $key=>$vls)
-            {
-                $fileName = $this->name;
-                $js .=  "var mockFile_".$key." = { name: \"".$vls->$fileName."\"};";
-                $js .= "myDropzone.options.addedfile.call(myDropzone, mockFile_".$key.");";
-                $js .= "myDropzone.options.thumbnail.call(myDropzone, mockFile_".$key.", \"".$imageUrl."/".$vls->$fileName."\");";
-            }
+        if(isset($this->options['renameFilename'])){
+            $js .= $this->dropzoneContainer.".options.renameFilename = ".$renameFilename.";";
         }
+
+        $js .= $this->setFiles($this->addFiles);
 
         $view->registerJs($js);
         DermaAsset::register($view);
+    }
+
+    protected function setFiles($files = [])
+    {
+        $js = "";
+        if (empty($files) === false) {
+            foreach ($files as $key=>$vls)
+            {
+                $name = basename($vls); // to get file name
+                $js .=  "var mockFile_".$key." = { name: \"".$name."\"};";
+                $js .= $this->dropzoneContainer.".options.addedfile.call(".$this->dropzoneContainer.", mockFile_".$key.");";
+                $js .= $this->dropzoneContainer.".options.thumbnail.call(".$this->dropzoneContainer.", mockFile_".$key.", \"".$vls."\");";
+                $js .= $this->dropzoneContainer.".options.complete.call(".$this->dropzoneContainer.", mockFile_".$key.", \"".$name."\");";
+            }
+        }
+
+        return $js;
     }
 }
