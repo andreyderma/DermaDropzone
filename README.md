@@ -59,7 +59,10 @@ Add existing images:
     $arr = []; //store in array
     foreach ($modelImages as $values)
     {
-        $arr[] = 'YOUR_IMAGES_URL';
+        $arr[] = array(
+            'name'=>$values->filename,
+            'fileUrl'=>'YOUR_FILE_URL'
+        );
         /*
             Example amazon s3 url
             https://s3-ap-southeast-1.amazonaws.com/bucket/donald_trump_sucks.jpg
