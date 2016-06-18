@@ -96,10 +96,13 @@ class AutoloadExample extends \yii\base\Widget
         if (empty($files) === false) {
             foreach ($files as $key=>$vls)
             {
-                $name = basename($vls); // to get file name
-                $js .=  "var mockFile_".$key." = { name: \"".$name."\"};";
+                $name = $vls['name'];
+                $fileUrl = $vls['fileUrl'];
+                unset($vls['fileUrl']);
+                $js .=  "var mockFile_".$key." = ".Json::encode($vls).";";
+                //$js .=  "var mockFile_".$key." = { name: \"".$name."\"};";
                 $js .= $this->dropzoneContainer.".options.addedfile.call(".$this->dropzoneContainer.", mockFile_".$key.");";
-                $js .= $this->dropzoneContainer.".options.thumbnail.call(".$this->dropzoneContainer.", mockFile_".$key.", \"".$vls."\");";
+                $js .= $this->dropzoneContainer.".options.thumbnail.call(".$this->dropzoneContainer.", mockFile_".$key.", \"".$fileUrl."\");";
                 $js .= $this->dropzoneContainer.".options.complete.call(".$this->dropzoneContainer.", mockFile_".$key.", \"".$name."\");";
             }
         }
